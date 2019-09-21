@@ -2,8 +2,14 @@
 
 class homeController extends controller{
 
-    public function index(){
-        
+    public function __construct(){
+       $users = new users();
+       
+       if(!$users -> isLogged()){
+           header("location:".BASE_URL."login");
+       }
     }
 
+    public function index(){
+    }
 }

@@ -1,0 +1,4 @@
+RewriteEngine On 
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUIST_FILENAME} !-d
+RewriteRule ^(.*)$ /userPage/index.php?url=$1 [QSA,L]
