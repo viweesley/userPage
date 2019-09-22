@@ -435,18 +435,22 @@ form{
     border-top:none;
 }
 
-.user_left .user_option .menu-item{
+.menu-item{
     padding:15px 0 15px 25px;
     color:#0d0d0d;
     border-bottom: solid .6px #eee;
     transition: ease-in-out .5s;
 }
 
+.menu-item i{
+    margin-right: 10px;
+}
+
 .user_left a{
   text-decoration: none;
 }
 
-.active_account, .user_option .menu-item:hover{
+.menu-item:hover{
     background-color: #eee;
 }
 
@@ -464,7 +468,7 @@ form{
 
 .account_data .group-input{
     margin-right: 2.666%;
-    width: 33.6666%;
+    width: 100%;
 }
 
 .group-sexo{

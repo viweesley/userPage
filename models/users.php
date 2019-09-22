@@ -2,6 +2,8 @@
 
 class users extends model{
 
+    private $id_user;
+
     public function isLogged(){
         if(!empty($_SESSION['token_login'])){
             $token_login = $_SESSION['token_login'];
@@ -39,9 +41,6 @@ class users extends model{
         $sql->bindValue(":name_user", $name_user);
         $sql->bindValue(":hash_password", $hash_password);
         $sql->execute();
-        echo $id;
-        echo $creation_date_user;
-        echo $hash_password;
 
         if($sql->rowCount() > 0){
             $dada_user = $sql->fetch();
@@ -102,7 +101,8 @@ class users extends model{
     }
 
     private function addDbTokenLogin($id, $token){
-        $sql = "UPDATE users SET token = :token WHERE id = :id";
+        $sql = "UPDATE users
+                SET token = :token WHERE id = :id";
         $sql = $this->db->prepare($sql);
         $sql->bindValue(":id" ,$id);
         $sql->bindValue(":token", $token);
@@ -111,7 +111,8 @@ class users extends model{
 
     private function updateDbUsersLastAccess($id){
         $data_access = date("Y-m-d H:i:s");
-        $sql = "UPDATE users SET last_access = :last_access";
+        $sql = "UPDATE users 
+                SET last_access = :last_access";
         $sql = $this->db->prepare($sql);
         $sql->bindValue(":last_access", $data_access);
         $sql->execute();
@@ -120,6 +121,38 @@ class users extends model{
     public function logout(){
         unset($_SESSION['token_login']);
         header('location:'.BASE_URL);
+    }
+
+    public function getUser(){
+        $sql = "SELECT * 
+                FROM   users 
+                WHERE  id = :id ";
+        $sql = $this->db->prepare($sql);
+        $sql->bindValue(":id", $this->id_user);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $dada_user = $sql->fetch();
+            return $dada_user;
+            exit;
+        }
+    }
+
+    public function setUser($name, $name_user){
+        $update_date_user = date("Y-m-d H:i:s");
+        $sql = "UPDATE users 
+                SET name = :name, name_user = :name_user, updated_at = :update_date_user
+                WHERE id = :id";
+        $sql = $this->db->prepare($sql);
+        $sql->bindValue(":name", $name);
+        $sql->bindValue(":name_user", $name_user);
+        $sql->bindValue(":update_date_user", $update_date_user);
+        $sql->bindValue(":id", $this->id_user);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            $_SESSION['msg_success'] = "Dados Alterados com sucesso!";
+        }
     }
 
 }
