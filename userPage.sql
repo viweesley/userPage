@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Tempo de geração: 22/09/2019 às 00:11
+-- Tempo de geração: 23/09/2019 às 02:06
 -- Versão do servidor: 10.4.6-MariaDB
 -- Versão do PHP: 7.3.8
 
@@ -35,17 +35,10 @@ CREATE TABLE `users` (
   `password` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL,
-  `active` int(11) NOT NULL,
-  `token` varchar(300) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `last_access` varchar(100) COLLATE utf8mb4_unicode_ci NOT NULL
+  `active` int(11) DEFAULT 1,
+  `token` varchar(300) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `last_access` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
---
--- Despejando dados para a tabela `users`
---
-
-INSERT INTO `users` (`id`, `name`, `name_user`, `password`, `created_at`, `updated_at`, `active`, `token`, `last_access`) VALUES
-(1, 'Wesley Vinicius', 'viweesleyy', '768a9605eeeecdb5dd3a84c66fb2fabca5', '2019-08-25 01:54:46', '2019-09-02 02:20:26', 0, '0c4b86d6e017835ffe5640394f8d0d63', '2019-09-22 00:10:40');
 
 --
 -- Índices de tabelas apagadas
@@ -55,7 +48,8 @@ INSERT INTO `users` (`id`, `name`, `name_user`, `password`, `created_at`, `updat
 -- Índices de tabela `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `name_user` (`name_user`);
 
 --
 -- AUTO_INCREMENT de tabelas apagadas
@@ -65,7 +59,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT de tabela `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
