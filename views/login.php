@@ -22,13 +22,7 @@
                     <div class="msg">
                         <p><?php echo ($msg);?></p>
                     </div>
-                <?php endif; ?>
-
-                <?php if(isset($msg_success) and !empty($msg_success)): ?>
-                    <div class="msg msg__success">
-                        <p><?php echo ($msg_success);?></p>
-                    </div>
-                <?php endif; ?>                
+                <?php endif; ?>             
                     <form method="POST" action="<?php echo BASE_URL?>login/login_action" id="form-contato" onsubmit="return validarLogin(this);">
                         <div class="group-input">
                             <label for="name-user-login">Nome de Usuario:</label>
@@ -53,12 +47,17 @@
                     <h2>Faça seu Cadastro</h2>
                     <h3></h3>
                 </div>
+                <?php if(isset($msg_success) and !empty($msg_success)): ?>
+                    <div class="msg msg__success">
+                        <p><?php echo ($msg_success);?></p>
+                    </div>
+                <?php endif; ?>   
                 <?php if(isset($msg_register) and !empty($msg_register)): ?>
                     <div class="msg">
                         <p><?php echo ($msg_register);?></p>
                     </div>
                 <?php endif; ?>
-                    <form method="POST" action="<?php echo BASE_URL?>login/registre__preview" onsubmit="return valideRegister(this);">
+                    <form method="POST" action="<?php echo BASE_URL?>login/addUser" onsubmit="return valideRegister(this);">
                         <div class="group-input">
                             <label for="name-cadastro">Nome Completo:</label>
                             <input type="text" name="name" class="campo" id="name-cadastro">

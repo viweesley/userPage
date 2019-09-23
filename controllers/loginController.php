@@ -50,6 +50,20 @@ class loginController extends controller{
         header("location:".BASE_URL);
     }
 
+    public function addUSer(){
+        if(!empty($_POST['cadastro_sub'])){
+            $name = addslashes($_POST['name']);
+            $name_user = addslashes($_POST['name-user']);
+            if(!empty($name) and !empty($name_user)){
+                $users = new users();
+                $users->addUser($name, $name_user);
+            }else{
+                $_SESSION['msg_error-register'] = "Todos os campo devem estar preenchidos!";
+            }
+        }
+        header("location:".BASE_URL);
+    }
+
     public function logout(){
         $users = new users();
         $users->logout();

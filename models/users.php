@@ -4,6 +4,30 @@ class users extends model{
 
     private $id_user;
 
+    public function addUser($name, $name_user){
+        $password = $name_user;
+        $creation_date_user = date("Y-m-d H:i:s");
+        $hash_password = $this->hashPasswordCreation($password, $creation_date_user);
+        $this->addDbuser($name, $name_user, $hash_password, $creation_date_user);
+    }
+
+    public function addDbUser($name, $name_user, $hash_password, $creation_date_user){
+        $sql = "INSERT INTO users (name, name_user, password, created_at) 
+                            VALUES (:name, :name_user, :password, :created_at)";
+        $sql = $this->db->prepare($sql);
+        $sql->bindValue(":name", $name);
+        $sql->bindValue(":name_user", $name_user);
+        $sql->bindValue("password", $hash_password);
+        $sql->bindValue(":created_at", $creation_date_user);
+        $sql->execute();
+        echo $creation_date_user;
+
+        if($sql->rowCount() > 0){
+            $_SESSION['msg_success'] = "Cadastro efetuado com sucesso";
+        }
+
+    }
+
     public function isLogged(){
         if(!empty($_SESSION['token_login'])){
             $token_login = $_SESSION['token_login'];
