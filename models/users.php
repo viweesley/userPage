@@ -3,12 +3,20 @@
 class users extends model{
 
     private $id_user;
+    private $name;
+    private $name_user;
 
     public function addUser($name, $name_user){
-        $password = $name_user;
-        $creation_date_user = date("Y-m-d H:i:s");
-        $hash_password = $this->hashPasswordCreation($password, $creation_date_user);
-        $this->addDbuser($name, $name_user, $hash_password, $creation_date_user);
+        $page = "addUser";
+        if($this->validateNameUser($name_user, $page)){
+            echo "5tjhb465hyg";
+            $password = $name_user;
+            $creation_date_user = date("Y-m-d H:i:s");
+            $hash_password = $this->hashPasswordCreation($password, $creation_date_user);
+            $this->addDbuser($name, $name_user, $hash_password, $creation_date_user);
+        }else{
+            $_SESSION['msg_register'] = "O nome de usuario já está sendo utilizado";
+        }
     }
 
     public function addDbUser($name, $name_user, $hash_password, $creation_date_user){
@@ -20,8 +28,7 @@ class users extends model{
         $sql->bindValue("password", $hash_password);
         $sql->bindValue(":created_at", $creation_date_user);
         $sql->execute();
-        echo $creation_date_user;
-
+      
         if($sql->rowCount() > 0){
             $_SESSION['msg_success'] = "Cadastro efetuado com sucesso";
         }
@@ -36,7 +43,6 @@ class users extends model{
         return false;
     }
 
-
     private function getTokenLogin($token_login){
         if(!empty($token_login)){
             $sql = "SELECT * FROM users WHERE token = :token";
@@ -45,8 +51,10 @@ class users extends model{
             $sql->execute();
 
             if($sql->rowCount() > 0){
-                $dada_user = $sql->fetch();
-                $this->id_user = $dada_user['id'];
+                $data_user = $sql->fetch();
+                $this->id_user = $data_user['id'];
+                $this->name = $data_user['name'];
+                $this->name_user = $data_user['name_user'];
                 return true;
             }
         }
@@ -163,6 +171,15 @@ class users extends model{
     }
 
     public function setUser($name, $name_user){
+        $page = "setUser";
+        if($this->name_user == $name_user){
+            $this->setDbUser($name, $name_user);
+        }elseif($this->validateNameUser($name_user, $page)){
+           $this->setDbUser($name, $name_user);
+        }
+    }
+
+    private function setDbUser($name, $name_user){
         $update_date_user = date("Y-m-d H:i:s");
         $sql = "UPDATE users 
                 SET name = :name, name_user = :name_user, updated_at = :update_date_user
@@ -176,6 +193,46 @@ class users extends model{
 
         if($sql->rowCount() > 0){
             $_SESSION['msg_success'] = "Dados Alterados com sucesso!";
+        }
+    }
+
+    private function validateNameUser($name_user, $page){
+        if($this->lengthNameUser($name_user, $page)){
+            if(!$this->UserNameEquals($name_user, $page)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private function UserNameEquals($name_user, $page){
+        $sql = "SELECT * FROM users WHERE name_user = :name_user";
+        $sql = $this->db->prepare($sql);
+        $sql->bindValue(":name_user", $name_user);
+        $sql->execute();
+
+        if($sql->rowCount() > 0){
+            if($page == "addUser") {
+                $_SESSION['msg_error-register'] = "Já existe este nome de usuario!";
+            }elseif($page == "setUser"){
+                $_SESSION['msg_error'] = "Já existe este nome de usuario!";
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private function lengthNameUser($name_user, $page){
+        $user_name_length = strlen($name_user);
+        if($user_name_length >= 5){
+            return true;
+        }else{
+            if($page == "addUser") {
+                $_SESSION['msg_error-register'] = "O nome de usuario tem que ter mais de 5 caracteres";
+            }elseif($page == "setUser"){
+                $_SESSION['msg_error'] = "O nome de usuario tem que ter mais de 5 caracteres";
+            }
+            return false;
         }
     }
 
